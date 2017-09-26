@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <meta charset="utf-8">
+    <title>Traditional Approach</title>
+  </head>
+  <body>
+    <div id="header" class="apply-background">
+      <div id="grand-header">
+        <h1 id="event-sourcing-in-data-driven-domain-modeling" class="text-center">Event Sourcing in Data-driven Domain Modeling</h1>
+        <p class="text-center"><em>A modern approach to domain modeling using hypermedia as a state of application.</em></p>
+        <p class="text-center">Buğra Ekuklu, [<a href="http://github.com/Chatatata">github</a>], Distributed Systems Developer</p>
+      </div>
+    </div>
+    <div class="container">
+      <div id="content">
+        <h3 id="traditional-approach">Traditional approach</h3>
+        <p>Assume that we need to build a software solution for a bank, barely making<br />
+        transactions between its own accounts for the sake of simplicity.<br />
+        Every user should have a balance, and they could withdraw/deposit some money.<br />
+        A withdrawal operation would reflected to user’s balance as a negative change,<br />
+        and a deposit operation would reflected to user’s balance as a positive<br />
+        change.<br />
+        Henceforth, we could create a table for the users, <code>users</code> like so:</p>
+        <table class="table">
+          <thead>
+            <tr class="header">
+              <th align="right"><strong>id</strong></th>
+              <th align="center">name</th>
+              <th align="center">balance</th>
+              <th>inserted_at</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="odd">
+              <td align="right">1</td>
+              <td align="center">Hayden Panettiere</td>
+              <td align="center">24.72 USD</td>
+              <td>2017-08-28 00:22:14.960193</td>
+            </tr>
+            <tr class="even">
+              <td align="right">2</td>
+              <td align="center">Megan Fox</td>
+              <td align="center">25.14 USD</td>
+              <td>2017-08-28 00:23:14.123512</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>When <em>Hayden</em> wants to withdraw some bucks, we could do that with following<br />
+        query in <em>PLpgSQL</em>:</p>
+        <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql">
+<span class="kw">UPDATE</span> <span class="ot">&quot;users&quot;</span>
+  <span class="kw">SET</span> <span class="ot">&quot;balance&quot;</span> = <span class="ot">&quot;balance&quot;</span> - (<span class="st">&#39;20.00 USD&#39;</span>):<span class="ch">:money</span>
+    <span class="kw">WHERE</span> <span class="ot">&quot;id&quot;</span> = <span class="dv">1</span> <span class="kw">AND</span> <span class="ot">&quot;balance&quot;</span> &gt;= (<span class="st">&#39;20.00 USD&#39;</span>):<span class="ch">:money</span>;</code></pre></div>
+        <p>That would decrement <em>Hayden</em>’s balance by <em>20.00 USD</em>.<br />
+        Similarly, deposit operation could be performed with a simple <code>UPDATE</code> query.</p>
+        <p>However, when it comes to transfer, following we need to perform a simple<br />
+        transaction.<br />
+        We would like to transfer some funds from <em>Hayden</em> to <em>Megan</em>.</p>
+        <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span>
+    affected_rows <span class="dt">int</span> <span class="kw">DEFAULT</span> <span class="dv">0</span>;
+  <span class="kw">BEGIN</span>
+    <span class="kw">BEGIN</span> <span class="kw">TRANSACTION</span> <span class="ot">&quot;transfer-VEVJW9WrThixnQr9vmR274LgltOC5EQoh5CYq2&quot;</span>;
+
+    <span class="kw">SET</span> <span class="kw">TRANSACTION</span> <span class="kw">ISOLATION</span> <span class="kw">LEVEL</span> <span class="kw">READ</span> <span class="kw">COMMITTED</span>;
+
+    <span class="kw">UPDATE</span> <span class="ot">&quot;users&quot;</span>
+    <span class="kw">SET</span> <span class="ot">&quot;balance&quot;</span> = <span class="ot">&quot;balance&quot;</span> - (<span class="st">&#39;20.00 USD&#39;</span>):<span class="ch">:money</span>
+      <span class="kw">WHERE</span> <span class="ot">&quot;id&quot;</span> = <span class="dv">1</span> <span class="kw">AND</span> <span class="ot">&quot;balance&quot;</span> &gt;= (<span class="st">&#39;20.00 USD&#39;</span>):<span class="ch">:money</span>;
+
+    affected_rows := SQL<span class="dt">%ROWCOUNT</span>; <span class="co">-- Get number of affected rows</span>
+
+    <span class="kw">IF</span> affected_rows = <span class="dv">1</span> <span class="kw">THEN</span>
+      <span class="kw">UPDATE</span> <span class="ot">&quot;users&quot;</span>
+      <span class="kw">SET</span> <span class="ot">&quot;balance&quot;</span> = <span class="ot">&quot;balance&quot;</span> + (<span class="st">&#39;20.00 USD&#39;</span>):<span class="ch">:money</span>
+        <span class="kw">WHERE</span> <span class="ot">&quot;id&quot;</span> = <span class="dv">2</span>;
+
+      <span class="kw">END</span> <span class="kw">TRANSACTION</span> <span class="ot">&quot;transfer-VEVJW9WrThixnQr9vmR274LgltOC5EQoh5CYq2&quot;</span>;
+    <span class="kw">ELSE</span>
+      <span class="kw">ROLLBACK</span>;
+    <span class="kw">END</span> <span class="kw">IF</span>;
+  <span class="kw">END</span>
+<span class="kw">END</span></code></pre></div>
+        <p>Of course, this is not an elegant solution.<br />
+        However, it shows a canonical way of doing it correctly.</p>
+        <p>Finally, we could get the current balance of <em>Hayden</em> with:</p>
+        <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;balance&quot;</span>
+        <span class="kw">FROM</span> <span class="ot">&quot;users&quot;</span>
+          <span class="kw">WHERE</span> <span class="ot">&quot;id&quot;</span> = <span class="dv">1</span>;</code></pre></div>
+        <h4 id="advantages">Advantages</h4>
+        <ul>
+          <li>Easy, straightforward implementation.</li>
+          <li>Performant query.</li>
+        </ul>
+        <h4 id="disadvantages">Disadvantages</h4>
+        <ul>
+          <li>Change history is not stored.</li>
+          <li>There would be no rollback action other than transaction-level rollback.</li>
+          <li><code>READ COMMITTED</code> or <code>SERIALIZABLE</code> transaction isolation levels might<br />
+          be required in order to achieve true atomicity over concurrency (<em>AoC</em>).</li>
+        </ul>
+        <p><a href="event-sourcing-approach.html" class="btn btn-primary float-right">Next page</a></p>
+      </div>
+    </div>
+    <div id="footer" class="apply-background">
+      <h4 id="license">License</h4>
+      <p>MIT</p>
+    </div>
+  </body>
+</html>

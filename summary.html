@@ -7,7 +7,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/main.css">
     <meta charset="utf-8">
-    <title>Event Sourcing</title>
+    <title>Summary</title>
   </head>
   <body>
     <div id="header" class="apply-background">
@@ -18,17 +18,23 @@
       </div>
     </div>
     <div class="container">
-      <h2 id="table-of-contents">Table of Contents</h2>
-      <ol>
-        <li><a href="preface.html">Preface</a></li>
-        <li><a href="implementation.html">Implementation</a></li>
-        <ol>
-          <li><a href="traditional-approach.html">Traditional approach</a></li>
-          <li><a href="event-sourcing-approach.html">The “Event Sourcing” approach</a></li>
-        </ol>
-        <li><a href="analysis.html">Analysis</a></li>
-        <li><a href="summary.html">Summary</a></li>
-      </ol>
+      <div id="content">
+        <h2 id="summary">Summary</h2>
+        <p>The examples were indeed in canonical form, yet available to show the<br />
+        intended logic of the <em>event sourcing</em>.<br />
+        A real life use case would include proper use of database indexes<br />
+        (B-tree, hash, GiST, GreMAP etc.), vacuuming, perpetual trigger<br />
+        functions and window functions in order to down-scale query times,<br />
+        since performing a self join on unindexed column might be<br />
+        <em>symbol of the death</em> for the whole stack.<br />
+        Also, this is not a magic wand, on data types with high update rates<br />
+        like real-time systems, such as beacon presence back-ends, the updates<br />
+        should not be converted to insertions as that may create a redundancy<br />
+        in data storage.<br />
+        Considering time-series database solutions like <em>Riak-TS</em> could be<br />
+        a good replacement for <em>event sourcing</em>.</p>
+        <p><a href="analysis.html" class="btn btn-secondary float-left">Previous page</a></p>
+      </div>
     </div>
     <div id="footer" class="apply-background">
       <h4 id="license">License</h4>

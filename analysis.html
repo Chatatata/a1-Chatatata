@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <meta charset="utf-8">
+    <title>Analysis</title>
+  </head>
+  <body>
+    <div id="header" class="apply-background">
+      <div id="grand-header">
+        <h1 id="event-sourcing-in-data-driven-domain-modeling" class="text-center">Event Sourcing in Data-driven Domain Modeling</h1>
+        <p class="text-center"><em>A modern approach to domain modeling using hypermedia as a state of application.</em></p>
+        <p class="text-center">Buğra Ekuklu, [<a href="http://github.com/Chatatata">github</a>], Distributed Systems Developer</p>
+      </div>
+    </div>
+    <div class="container">
+      <div id="content">
+        <h2 id="analysis">Analysis</h2>
+        <p>Under the hood, we are converting our insertion overhead into a read overhead,<br />
+        making our database design <em>read oriented</em>.<br />
+        Having considered latest database technologies, those reads might sometimes<br />
+        does not necessarily need to be consistent between different users.<br />
+        Our example was not one of them, nevertheless, in social media applications,<br />
+        those types of data is <em>endemic</em>.<br />
+        Distinguishing several properties for your data, you may replicate that data<br />
+        with an eventual consistent data persistence solution.</p>
+        <p><img src="https://github.com/Chatatata/a1-Chatatata/raw/gh-pages/assets/multi-tenant%20arch.png" alt="BuyBuddy Platform Architecture" class="img-fluid"/></p>
+        <p><em>Figure: Data persistence architecture of <a href="http://buybuddy.co">BuyBuddy</a> designed by myself.</em></p>
+        <p>As you see, one of my architectures was using <strong>OLTP</strong> solutions with<br />
+        homebrew multi-tenancy, whereas it was using an <strong>OLAP</strong> cluster to<br />
+        process analytical queries to the master tenant.<br />
+        That architecture allowed horizontal scaling for web servers, as well as<br />
+        data persistence layers, and it does not limit further sharding and<br />
+        replication applications to the distinct nodes.<br />
+        As it is said, making insertion operations one-hit as possible has an<br />
+        adverse affect of making the database <em>read oriented</em>, using different<br />
+        scaling methods rescue us from long query times whereas protecting<br />
+        all available data, which can be cumulated by analytical processing<br />
+        engine.</p>
+        <p><a href="summary.html" class="btn btn-primary float-right">Next page</a></p>
+      </div>
+    </div>
+    <div id="footer" class="apply-background">
+      <h4 id="license">License</h4>
+      <p>MIT</p>
+    </div>
+  </body>
+</html>

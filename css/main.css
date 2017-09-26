@@ -1,0 +1,55 @@
+div.container {
+  margin-top: 50px;
+  color: rgb(45, 45, 45);
+}
+
+h3 {
+  margin-bottom: 2rem;
+}
+
+#header {
+  -webkit-box-shadow: 2px 3px 13px -3px rgba(0,0,0,0.62);
+  -moz-box-shadow: 2px 3px 13px -3px rgba(0,0,0,0.62);
+  box-shadow: 2px 3px 13px -3px rgba(0,0,0,0.62);
+}
+
+#grand-header {
+  padding: 20px;
+  padding-top: 80px;
+}
+
+#authors {
+  margin-top: 3rem;
+}
+
+#revision-history {
+  margin-top: 2rem;
+}
+
+#table-of-contents {
+  margin-top: 2rem;
+}
+
+#content {
+  margin-top: 2rem;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 200%;
+}
+
+#content div.sourceCode {
+  line-height: 125%;
+}
+
+#footer {
+  margin-top: 5rem;
+  padding: 20px;
+  padding-bottom: 80px;
+}
+
+.apply-background {
+  background-image: url("../img/ao.gif");
+  background-repeat: repeat;
+  color: white;
+}

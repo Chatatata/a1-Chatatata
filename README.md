@@ -11,8 +11,8 @@ Copyright (c), 2017.
 
 1. Preface
 2. Implementation
-  a. Traditional approach
-  b. The "Event Sourcing" approach
+  - Traditional approach
+  - The "Event Sourcing" approach
 3. Analysis
 4. Summary
 
