@@ -38,6 +38,12 @@ h3 {
   line-height: 200%;
 }
 
+#article-image {
+  width: 200px;
+  border: 2px solid #bebebe;
+  box-shadow: 2px 3px 13px -3px rgba(0,0,0,0.62);
+}
+
 #content div.sourceCode {
   line-height: 125%;
 }
